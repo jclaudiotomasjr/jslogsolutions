@@ -1,11 +1,14 @@
 package controllers
 
 import (
+	"api/src/autenticacao"
 	"api/src/banco"
 	"api/src/modelos"
 	"api/src/repositorios"
 	"api/src/respostas"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -99,7 +102,19 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 	if erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
-	} 
+	}
+	usuarioIDNoToken, erro := autenticacao.ExtrairUsuarioID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+
+	}
+	fmt.Println(usuarioIDNoToken)
+
+	if usuarioID != usuarioIDNoToken {
+		respostas.Erro(w, http.StatusForbidden, errors.New("Não é possível atualizar um usuario diferente do seu"))
+		return
+	}
 
 	corpoRequisao, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
@@ -110,7 +125,7 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 	if erro = json.Unmarshal(corpoRequisao, &usuario); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
-	} 
+	}
 	if erro = usuario.Preparar("editar"); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
@@ -119,7 +134,7 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
-	}	
+	}
 	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
@@ -129,10 +144,7 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respostas.JSON(w, http.StatusNoContent, nil)
-	
 
-
-	
 }
 
 //Deleta usuario do banco de dados
