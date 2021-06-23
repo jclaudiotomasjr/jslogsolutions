@@ -8,7 +8,6 @@ import (
 	"api/src/respostas"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -103,13 +102,13 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
+
 	usuarioIDNoToken, erro := autenticacao.ExtrairUsuarioID(r)
 	if erro != nil {
 		respostas.Erro(w, http.StatusUnauthorized, erro)
 		return
 
 	}
-	fmt.Println(usuarioIDNoToken)
 
 	if usuarioID != usuarioIDNoToken {
 		respostas.Erro(w, http.StatusForbidden, errors.New("Não é possível atualizar um usuario diferente do seu"))

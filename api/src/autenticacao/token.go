@@ -17,7 +17,7 @@ func CriarToken(usuarioID int64) (string, error) {
 	permissoes := jwt.MapClaims{}
 	permissoes["authorized"] = true
 	permissoes["exp"] = time.Now().Add(time.Hour * 8).Unix()
-	permissoes["usuarioID"] = usuarioID
+	permissoes["usuarioId"] = usuarioID
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissoes)
 	return token.SignedString([]byte(config.SecretKey))
 
@@ -34,7 +34,8 @@ func ValidarToken(r *http.Request) error {
 	if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		return nil
 	}
-	return errors.New("Token invalido")
+
+	return errors.New("Token inválido")
 }
 
 //ExtrairUsuarioID retorna um usuarioID que está salvo no token
@@ -53,8 +54,8 @@ func ExtrairUsuarioID(r *http.Request) (int64, error) {
 		}
 		return usuarioID, nil
 	}
-	
-	return 0, errors.New("Token inálido")
+
+	return 0, errors.New("Token inválido")
 
 }
 

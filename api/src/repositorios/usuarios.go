@@ -38,6 +38,7 @@ func (repositorio Usuarios) Criar(usuario modelos.Usuario) (int64, error) {
 	return ultimoIDInserido, nil
 }
 
+//Buscar usuario por nome ou por email
 func (repositorio Usuarios) Buscar(nomeOuEmail string) ([]modelos.Usuario, error) {
 	nomeOuEmail = fmt.Sprintf("%%%s%%", nomeOuEmail) //%nomeOuEmial%
 
@@ -91,6 +92,7 @@ func (repositorio Usuarios) BuscarPorID(ID int64) (modelos.Usuario, error) {
 	return usuario, nil
 }
 
+//Atualizar altera informações do usuario
 func (repositorio Usuarios) Atualizar(ID int64, usuario modelos.Usuario) error {
 	statement, erro := repositorio.db.Prepare(
 		"update usuarios set nome = ?, email = ? where id = ?",
