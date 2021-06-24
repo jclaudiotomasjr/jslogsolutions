@@ -1,0 +1,121 @@
+
+.logo-container img{
+    height: 10rem; /*Altura*/
+}
+.logo-container{
+    text-align: center;
+    margin-bottom: 3.2rem;
+}
+.logo-container h2{
+    font-weight: 500;
+    font-size: 1.2rem;
+    line-height: 4.6rem;
+    margin-top: 0.8rem;
+}
+
+.hero-image{
+    width: 100%;      /*Largura*/
+}
+.button-container{
+    display: flex;
+    justify-content: center;
+    margin: 3.2rem 0;
+}
+
+.button-container a {
+
+    width: 30rem;
+    height: 10.4rem;
+    border-radius:0.8rem ;   /*Arredondar as bordas*/
+    margin-right: 1.6rem;
+
+    font: 300 1.2rem Poppins;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+    color: #FFFFFF;
+    transition: background 0.2s;
+}
+
+.button-container a img{
+    width: 4rem;
+    margin-right: 2.4rem;
+
+}
+.button-container a.study {
+    background:#9871F5;
+}
+
+.button-container a.study:hover{
+    background: #916BEA;
+}
+
+.button-container a.give-classes{
+    background:#916BEA;
+    margin-right: 0;
+}
+.button-container a.give-classes:hover{
+    background:#916BEA;
+}
+
+.total-connections{
+
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.total-connections img{
+    margin-left: 0.8rem;
+}
+
+@media(max-width:699px){
+    :root{
+        font-size: 40%; /* Modificar as medidas rem*/
+    }
+}
+
+@media (min-width: 1100px){
+    #page-inicial #container{
+        max-width: 1100px;
+        display: grid;
+        grid-template-columns: 2fr 1fr 2fr;
+        grid-template-rows: 300px 1fr;
+        grid-template-areas: "proffy image image""button button texting" ;
+        column-gap: 87px;
+        row-gap: 86px;
+    }
+}
+
+.logo-container{
+    grid-area: proffy;
+    text-align: initial;
+    align-self: center;
+    margin:0;
+}
+
+.logo-container img{
+    height: 51px;
+    filter: invert(99%);
+
+
+}
+
+.hero-image{
+    grid-area: image;
+    height: 350px;
+
+}
+.button-container{
+    grid-area: button;
+    justify-content: flex-start;
+    margin: 0;
+}
+.total-connections{
+    grid-area: texting;
+    justify-self: end;
+    font-size: 1.2rem;
+}
