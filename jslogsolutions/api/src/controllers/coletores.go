@@ -1,9 +1,53 @@
 package controllers
 
-import "net/http"
+import (
+	"api/src/autenticacao"
+	"api/src/banco"
+	"api/src/modelos"
+	"api/src/repositorios"
+	"api/src/respostas"
+	"encoding/json"
+	"io/ioutil"
+	"net/http"
+)
 
 //CriarColetor adiciona um coletor no BD
 func CriarColetor(w http.ResponseWriter, r *http.Request) {
+	usuarioID, erro := autenticacao.ExtrairUsuarioID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	corpoRequisicao, erro := ioutil.ReadAll(r.Body)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
+		return
+	}
+
+	var coletor modelos.Coletor
+	if erro = json.Unmarshal(corpoRequisicao, &coletor); erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	coletor.AutorID = usuarioID
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDeColetores(db)
+	coletor.IDNrColetor, erro = repositorio.Criar(coletor)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusCreated, coletor)
 
 }
 
