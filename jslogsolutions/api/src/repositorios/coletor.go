@@ -18,14 +18,14 @@ func NovoRepositorioDeColetores(db *sql.DB) *Coletores {
 //Criar insere um coletor do BD
 func (repositorio Coletores) Criar(coletor modelos.Coletor) (int64, error) {
 	statement, erro := repositorio.db.Prepare(
-		"insert into coletores (idnrcoletor, nrserie, autor_id) values (? ? ?)",
+		"insert into coletores (nrcoletor, nrserie, marca, autor_id, estado) values (?, ?, ?, ?, ?)",
 	)
 	if erro != nil {
 		return 0, erro
 	}
 	defer statement.Close()
 
-	resultado, erro := statement.Exec(coletor.IDNrColetor, coletor.NrSerie, coletor.AutorID)
+	resultado, erro := statement.Exec(coletor.NrColetor, coletor.NrSerie, coletor.Marca, coletor.AutorID, coletor.Estado)
 	if erro != nil {
 		return 0, erro
 	}

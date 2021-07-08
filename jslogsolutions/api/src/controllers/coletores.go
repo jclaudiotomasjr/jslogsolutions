@@ -33,6 +33,11 @@ func CriarColetor(w http.ResponseWriter, r *http.Request) {
 
 	coletor.AutorID = usuarioID
 
+	if erro = coletor.Preparar(); erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
 	db, erro := banco.Conectar()
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -41,7 +46,7 @@ func CriarColetor(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioDeColetores(db)
-	coletor.IDNrColetor, erro = repositorio.Criar(coletor)
+	coletor.ID, erro = repositorio.Criar(coletor)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
