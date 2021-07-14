@@ -12,7 +12,7 @@ type Coletor struct {
 	NrColetor string    `json:"nrcoletor,omitempty"`
 	NrSerie   string    `json:"nrserie,omitempty"`
 	Marca     string    `json:"marca,omitempty"`
-	AutorID   int64     `json:"autorId,omitempty"`
+	AutorID   int64     `json:"autor_id,omitempty"`
 	AutorNome string    `json:"autornome,omitempty"`
 	Estado    string    `json:"estado,omitempty"`
 	CriadoEm  time.Time `json:"criadoEm,omitempty"`

@@ -9,6 +9,9 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 //CriarColetor adiciona um coletor no BD
@@ -63,6 +66,29 @@ func BuscarColetores(w http.ResponseWriter, r *http.Request) {
 
 //BuscarColetor retorna um coletor específico do BD
 func BuscarColetor(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	coletorID, erro := strconv.ParseInt(parametros["coletorId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDeColetores(db)
+	coletor, erro := repositorio.BuscarPorID(coletorID)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, coletor)
+
+
 
 }
 

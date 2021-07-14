@@ -38,3 +38,34 @@ func (repositorio Coletores) Criar(coletor modelos.Coletor) (int64, error) {
 	return int64(ultimoIDInserido), nil
 
 }
+
+//BuscarPorID traz um único coletor do BD
+func (repositorio Coletores) BuscarPorID(coletorID int64) (modelos.Coletor, error) {
+	linha, erro := repositorio.db.Query(`
+		select c.*, u.nome from coletores c inner join usuarios u
+		on u.id = c.autor_id where c.id = ?`,
+		coletorID,
+	)
+	if erro != nil {
+		return modelos.Coletor{}, erro
+	}
+	defer linha.Close()
+
+	var coletor modelos.Coletor
+
+	if linha.Next() {
+		if erro = linha.Scan(
+			&coletor.ID,
+			&coletor.NrColetor,
+			&coletor.NrSerie,
+			&coletor.Marca,
+			&coletor.AutorID,
+			&coletor.Estado,
+			&coletor.CriadoEm,
+			&coletor.AutorNome,
+		); erro != nil {
+			return modelos.Coletor{}, erro
+		}
+	}
+	return coletor, nil
+}
