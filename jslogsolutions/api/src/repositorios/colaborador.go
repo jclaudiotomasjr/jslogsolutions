@@ -38,3 +38,35 @@ func (repositorio Colaboradores) Criar(colaborador modelos.Colaborador) (int64, 
 	return int64(ultimoIDInserido), nil
 
 }
+
+func (repositorio Colaboradores) BuscarPorID(colaboradorID int64) (modelos.Colaborador, error) {
+	linha, erro := repositorio.db.Query(
+		`select f.*, u.nome from
+		colaboradores f inner join usuarios u
+		on u.id = f.autor_id where f.id = ?`,
+		colaboradorID,
+	)
+	if erro != nil {
+		return modelos.Colaborador{}, erro
+	}
+	defer linha.Close()
+
+	var colaborador modelos.Colaborador
+
+	if linha.Next() {
+		if erro = linha.Scan(
+			&colaborador.ID,
+			&colaborador.Nome,
+			&colaborador.Matricula,
+			&colaborador.AutorID,
+			&colaborador.Setor,
+			&colaborador.Turno,
+			&colaborador.CriadoEm,
+			&colaborador.AutorNome,
+		); erro != nil {
+			return modelos.Colaborador{}, erro
+		}
+	}
+	return colaborador, nil
+
+}

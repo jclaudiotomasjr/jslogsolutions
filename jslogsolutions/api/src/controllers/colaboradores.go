@@ -9,6 +9,9 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 //CriarColaborador adiciona um novo colaborador no BD
@@ -63,7 +66,28 @@ func BuscarColaboradores(w http.ResponseWriter, r *http.Request) {
 
 //BuscarColaborador retorna um colaborador específico do BD
 func BuscarColaborador(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	colaboradorID, erro := strconv.ParseInt(parametros["colaboradorId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return	
+	}
 
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro) 
+		return	
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDeColaboradores(db)
+	colaborador, erro := repositorio.BuscarPorID(colaboradorID)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, colaborador)
 }
 
 //AtualizarColaborador atualiza um colaborador específico do BD

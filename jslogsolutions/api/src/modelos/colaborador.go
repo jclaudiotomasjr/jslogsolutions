@@ -11,7 +11,7 @@ type Colaborador struct {
 	ID        int64     `json:"id,omitempty"`
 	Matricula string    `json:"matricula,omitempty"`
 	Nome      string    `json:"nome,omitempty"`
-	AutorID   int64     `json:"autorId,omitempty"`
+	AutorID   int64     `json:"autor_id,omitempty"`
 	AutorNome string    `json:"autornome,omitempty"`
 	Setor     string    `json:"setor,omitempty"`
 	Turno     string    `json:"turno,omitempty"`
