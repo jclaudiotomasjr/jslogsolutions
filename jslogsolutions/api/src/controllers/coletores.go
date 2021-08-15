@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -61,6 +62,17 @@ func CriarColetor(w http.ResponseWriter, r *http.Request) {
 
 //BuscarColetores retorna todos os coletores do BD
 func BuscarColetores(w http.ResponseWriter, r *http.Request) {
+	numeroColetorOuNumeroSerie := strings.ToLower(r.URL.Query().Get("coletor"))
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDeColetores(db)
+	coletoresOuSeries, erro := repositorio.BuscarPorNrColetor(numeroColetorOuNumeroSerie)
 
 }
 
@@ -87,8 +99,6 @@ func BuscarColetor(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respostas.JSON(w, http.StatusOK, coletor)
-
-
 
 }
 
