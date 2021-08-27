@@ -3,6 +3,7 @@ package repositorios
 import (
 	"api/src/modelos"
 	"database/sql"
+	"fmt"
 )
 
 //Coletores representa um repositorio de coletores
@@ -68,4 +69,12 @@ func (repositorio Coletores) BuscarPorID(coletorID int64) (modelos.Coletor, erro
 		}
 	}
 	return coletor, nil
+}
+
+func (repositorio Coletores) Buscar(numeroColetorOuNumeroSerie string) ([]modelos.Coletor, error){
+	numeroColetorOuNumeroSerie = fmt.Sprintf("%%%s%%", numeroColetorOuNumeroSerie)
+
+	linhas, erro := repositorio.db.Query(
+		"select id, "
+	)
 }

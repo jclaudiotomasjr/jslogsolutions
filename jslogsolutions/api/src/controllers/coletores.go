@@ -72,7 +72,7 @@ func BuscarColetores(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioDeColetores(db)
-	coletoresOuSeries, erro := repositorio.BuscarPorNrColetor(numeroColetorOuNumeroSerie)
+	coletoresOuSeries, erro := repositorio.Buscar(numeroColetorOuNumeroSerie)
 
 }
 
