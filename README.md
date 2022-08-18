@@ -1,4 +1,4 @@
-> :constrution: app jslogsolutions :constrution:
+> :construction: app jslogsolutions :construction:
 
 > **Status em desenvolvimento**
 
